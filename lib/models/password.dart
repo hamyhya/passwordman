@@ -19,7 +19,7 @@ class Password {
       userId: map['userId'],
       title: map['title'],
       username: map['username'],
-      password: map['password'], // Encrypted password will be decrypted later
+      password: map['password'],
     );
   }
 }

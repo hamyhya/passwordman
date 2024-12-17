@@ -13,7 +13,6 @@ final List<Widget> _pages = [];
 @override
 void initState() {
 super.initState();
-// Initialize pages with userId
 _pages.addAll([
 PasswordScreen(userId: widget.userId),
 ProfileScreen(userId: widget.userId),

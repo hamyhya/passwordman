@@ -1,68 +1,62 @@
 import 'package:flutter/material.dart';
 import '../database/db_helper.dart';
 import 'login_screen.dart';
+
 class ProfileScreen extends StatelessWidget {
-final int userId;
-const ProfileScreen({required this.userId, Key? key}) :
-super(key: key);
-Future<Map<String, dynamic>> _fetchUserData() async {
-final db = await DBHelper().database;
-final results = await db.query(
-'users',
-where: 'id = ?',
-whereArgs: [userId],
-);
-return results.isNotEmpty ? results.first : {};
-}
-@override
-Widget build(BuildContext context) {
-return FutureBuilder<Map<String, dynamic>>(
-future: _fetchUserData(),
-builder: (context, snapshot) {
-if (snapshot.connectionState ==
-ConnectionState.waiting) {
-return Center(child:
-CircularProgressIndicator());
-}
-if (!snapshot.hasData || snapshot.data!.isEmpty) {
-return Center(child: Text('User data not found.'));
-}
-final userData = snapshot.data!;
-return Padding(
-padding: const EdgeInsets.all(16.0),
-child: Column(
-crossAxisAlignment: CrossAxisAlignment.start,
-children: [
-Text(
-'Profile',
-style:
+  final int userId;
 
-Theme.of(context).textTheme.headlineLarge,
-),
-SizedBox(height: 20),
-Text('Full Name: ${userData['fullname']}'),
-Text('Username: ${userData['username']}'),
-SizedBox(height: 20),
-ElevatedButton(
-onPressed: () {
-// Clear the stack and navigate to the Login screen
+  const ProfileScreen({required this.userId, Key? key}) : super(key: key);
 
-Navigator.pushAndRemoveUntil(
+  Future<Map<String, dynamic>> _fetchUserData() async {
+    final db = await DBHelper().database;
+    final results = await db.query(
+      'users',
+      where: 'id = ?',
+      whereArgs: [userId],
+    );
+    return results.isNotEmpty ? results.first : {};
+  }
 
-context,
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<Map<String, dynamic>>(
+      future: _fetchUserData(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        }
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(child: Text('User data not found.'));
+        }
+        final userData = snapshot.data!;
 
-MaterialPageRoute(builder: (context) =>
-
-LoginScreen()),
-(route) => false, // Remove all previous routes
-);
-},
-child: Text('Logout'),
-),
-],
-),
-);
-},
-);
-}
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Profile',
+                style: Theme.of(context).textTheme.headlineLarge,
+              ),
+              SizedBox(height: 20),
+              Text('Full Name: ${userData['fullname']}'),
+              Text('Username: ${userData['username']}'),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                    (route) => false,
+                  );
+                },
+                child: Text('Logout'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
